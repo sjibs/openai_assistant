@@ -1,5 +1,11 @@
 entity.assistant.add_form:
   route_name: 'entity.assistant.add_form'
-  title: 'Add assistant'
+  title: 'New assistant'
+  appears_on:
+    - entity.assistant.collection
+
+openai_assistant.import_assistant:
+  route_name: 'openai_assistant.import_assistant'
+  title: 'Import assistant from web'
   appears_on:
     - entity.assistant.collection

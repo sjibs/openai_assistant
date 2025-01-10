@@ -37,3 +37,11 @@ openai_assistant.settings:
     _form: 'Drupal\openai_assistant\Form\SettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+openai_assistant.import_assistant:
+  path: '/admin/structure/assistant/import'
+  defaults:
+    _form: '\Drupal\openai_assistant\Form\ImportAssistantForm'
+    _title: 'Import Assistant'
+  requirements:
+    _permission: 'administer assistant'
