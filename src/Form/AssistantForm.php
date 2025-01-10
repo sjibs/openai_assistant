@@ -5,6 +5,8 @@ namespace Drupal\openai_assistant\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\openai_assistant\Entity\Assistant;
+use Drupal\openai_assistant\Services\ApiClient;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Assistant form.
@@ -12,10 +14,35 @@ use Drupal\openai_assistant\Entity\Assistant;
 final class AssistantForm extends EntityForm {
 
   /**
+   * The API client service.
+   *
+   * @var \Drupal\openai_assistant\Services\ApiClient
+   */
+  protected ApiClient $apiClient;
+
+  /**
+   * Constructs an AssistantForm object.
+   *
+   * @param \Drupal\openai_assistant\Services\ApiClient $api_client
+   *   The API client service.
+   */
+  public function __construct(ApiClient $api_client) {
+    $this->apiClient = $api_client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): self {
+    return new static(
+      $container->get('openai_assistant.api_client')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state): array {
-
     $form = parent::form($form, $form_state);
 
     $form['label'] = [
@@ -36,27 +63,40 @@ final class AssistantForm extends EntityForm {
       '#disabled' => !$this->entity->isNew(),
     ];
 
-    $form['status'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enabled'),
-      '#default_value' => $this->entity->status(),
-    ];
-
     $form['description'] = [
-      '#type' => 'textarea',
+      '#type' => 'textfield',
       '#title' => $this->t('Admin Description'),
       '#default_value' => $this->entity->get('description'),
     ];
 
+    // Fetch the models from the API client.
+    $models = $this->apiClient->getModels();
+    $model_options = [];
+    foreach ($models as $model) {
+      $model_options[$model['id']] = $model['id'];
+    }
+
     $form['model'] = [
-      '#type' => 'textfield',
+      '#type' => 'select',
       '#title' => $this->t('Model'),
-      '#maxlength' => 255,
+      '#options' => $model_options,
       '#default_value' => $this->entity->get('model'),
       '#required' => TRUE,
+      '#description' => $this->t('GPT-4o mini is recommended as it\'s typically cheaper to run.'),
     ];
 
-    $form['temperature'] = [
+    $form['system_instructions'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('System Instructions'),
+      '#default_value' => $this->entity->get('system_instructions'),
+    ];
+
+    $form['generation_settings'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Generation Settings'),
+    ];
+
+    $form['generation_settings']['temperature'] = [
       '#type' => 'number',
       '#title' => $this->t('Temperature'),
       '#default_value' => $this->entity->get('temperature'),
@@ -64,22 +104,24 @@ final class AssistantForm extends EntityForm {
       '#max' => 2.0,
       '#step' => 0.1,
       '#required' => TRUE,
+      '#description' => $this->t('Controls the randomness of the model\'s output. Lower values produce more deterministic results.'),
     ];
 
-    $form['topP'] = [
+    $form['generation_settings']['topP'] = [
       '#type' => 'number',
-      '#title' => $this->t('TopP'),
+      '#title' => $this->t('Top-p'),
       '#default_value' => $this->entity->get('topP'),
       '#min' => 0.0,
       '#max' => 1.0,
       '#step' => 0.1,
       '#required' => TRUE,
+      '#description' => $this->t('Limits the cumulative probability of tokens considered for sampling. Lower values produce more deterministic results.'),
     ];
 
-    $form['system_instructions'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('System Instructions'),
-      '#default_value' => $this->entity->get('system_instructions'),
+    $form['status'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enabled'),
+      '#default_value' => $this->entity->status(),
     ];
 
     return $form;

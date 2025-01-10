@@ -62,6 +62,18 @@ class ApiClient {
   }
 
   /**
+   * Fetches the list of OpenAI models.
+   *
+   * @return array
+   *   The list of models.
+   */
+  public function getModels(): array {
+    $endpoint = 'https://api.openai.com/v1/models';
+    $response = $this->request($endpoint);
+    return $response['data'] ?? [];
+  }
+
+  /**
    * Fetches the list of OpenAI assistants.
    *
    * @return array
