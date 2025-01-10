@@ -3,3 +3,7 @@ type: module
 description: 'A flexible chat window that integrates with OpenAI&#039;s API'
 package: Custom
 core_version_requirement: ^10
+dependencies:
+  - drupal:core
+  - drupal:config
+  - drupal:http_client

@@ -35,6 +35,7 @@ final class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('OpenAI Secret Key'),
       '#default_value' => $config->get('openai_secret_key') ?: getenv('OPENAI_SECRET_KEY'),
       '#description' => $this->t('Enter your OpenAI secret key. You can also set this using the OPENAI_SECRET_KEY environment variable.'),
+      '#maxlength'  =>512,
     ];
 
     return parent::buildForm($form, $form_state);

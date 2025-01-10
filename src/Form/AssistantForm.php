@@ -27,8 +27,9 @@ final class AssistantForm extends EntityForm {
     ];
 
     $form['id'] = [
-      '#type' => 'machine_name',
+      '#type' => 'textfield',
       '#default_value' => $this->entity->id(),
+      '#title' => $this->t('Assistant ID'),
       '#machine_name' => [
         'exists' => [Assistant::class, 'load'],
       ],
@@ -43,7 +44,7 @@ final class AssistantForm extends EntityForm {
 
     $form['description'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('Description'),
+      '#title' => $this->t('Admin Description'),
       '#default_value' => $this->entity->get('description'),
     ];
 
@@ -79,14 +80,6 @@ final class AssistantForm extends EntityForm {
       '#type' => 'textarea',
       '#title' => $this->t('System Instructions'),
       '#default_value' => $this->entity->get('system_instructions'),
-    ];
-
-    $form['project_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Project ID'),
-      '#maxlength' => 255,
-      '#default_value' => $this->entity->get('project_id'),
-      '#required' => TRUE,
     ];
 
     return $form;

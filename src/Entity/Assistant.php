@@ -46,8 +46,7 @@ use Drupal\openai_assistant\AssistantInterface;
  *     "model",
  *     "temperature",
  *     "topP",
- *     "system_instructions",
- *     "project_id",
+ *     "system_instructions"
  *   },
  * )
  */
@@ -66,7 +65,7 @@ final class Assistant extends ConfigEntityBase implements AssistantInterface {
   /**
    * The assistant description.
    */
-  protected string $description;
+  protected ?string $description;
 
   /**
    * The model.
@@ -88,8 +87,4 @@ final class Assistant extends ConfigEntityBase implements AssistantInterface {
    */
   protected string $system_instructions;
 
-  /**
-   * The project ID.
-   */
-  protected string $project_id;
 }

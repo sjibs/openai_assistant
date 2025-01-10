@@ -1,0 +1,4 @@
+services:
+  openai_assistant.api_client:
+    class: Drupal\openai_assistant\Services\ApiClient
+    arguments: ['@http_client', '@config.factory']
