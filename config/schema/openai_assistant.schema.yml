@@ -26,3 +26,12 @@ openai_assistant.assistant:
     project_id:
       type: string
       label: 'Project ID'
+
+# Schema for the configuration files of the OpenAI-Assistant module.
+openai_assistant.settings:
+  type: config_object
+  label: 'OpenAI-Assistant settings'
+  mapping:
+    openai_secret_key:
+      type: string
+      label: 'OpenAI Secret Key'

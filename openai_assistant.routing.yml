@@ -29,3 +29,11 @@ entity.assistant.delete_form:
     _title: 'Delete an assistant'
   requirements:
     _permission: 'administer assistant'
+
+openai_assistant.settings:
+  path: '/admin/config/system/settings'
+  defaults:
+    _title: 'OpenAI Assistant Settings'
+    _form: 'Drupal\openai_assistant\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
