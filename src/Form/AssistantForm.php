@@ -81,6 +81,14 @@ final class AssistantForm extends EntityForm {
       '#default_value' => $this->entity->get('system_instructions'),
     ];
 
+    $form['project_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Project ID'),
+      '#maxlength' => 255,
+      '#default_value' => $this->entity->get('project_id'),
+      '#required' => TRUE,
+    ];
+
     return $form;
   }
 

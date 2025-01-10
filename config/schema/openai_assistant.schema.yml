@@ -23,3 +23,6 @@ openai_assistant.assistant:
     system_instructions:
       type: text
       label: 'System Instructions'
+    project_id:
+      type: string
+      label: 'Project ID'
