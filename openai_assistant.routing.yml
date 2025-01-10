@@ -1,0 +1,31 @@
+entity.assistant.collection:
+  path: '/admin/structure/assistant'
+  defaults:
+    _entity_list: 'assistant'
+    _title: 'Assistant configuration'
+  requirements:
+    _permission: 'administer assistant'
+
+entity.assistant.add_form:
+  path: '/admin/structure/assistant/add'
+  defaults:
+    _entity_form: 'assistant.add'
+    _title: 'Add an assistant'
+  requirements:
+    _permission: 'administer assistant'
+
+entity.assistant.edit_form:
+  path: '/admin/structure/assistant/{assistant}'
+  defaults:
+    _entity_form: 'assistant.edit'
+    _title: 'Edit an assistant'
+  requirements:
+    _permission: 'administer assistant'
+
+entity.assistant.delete_form:
+  path: '/admin/structure/assistant/{assistant}/delete'
+  defaults:
+    _entity_form: 'assistant.delete'
+    _title: 'Delete an assistant'
+  requirements:
+    _permission: 'administer assistant'

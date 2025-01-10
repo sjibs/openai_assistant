@@ -1,0 +1,25 @@
+openai_assistant.assistant:
+  type: config_entity
+  label: 'Assistant'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: string
+      label: 'Label'
+    description:
+      type: string
+      label: 'Description'
+    model:
+      type: string
+      label: 'Model'
+    temperature:
+      type: float
+      label: 'Temperature'
+    topP:
+      type: float
+      label: 'TopP'
+    system_instructions:
+      type: text
+      label: 'System Instructions'

@@ -1,0 +1,5 @@
+entity.assistant.overview:
+  title: Assistants
+  parent: system.admin_structure
+  description: 'List of assistants to extend site functionality.'
+  route_name: entity.assistant.collection
