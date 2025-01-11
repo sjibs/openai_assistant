@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\openai_assistant\Services\ApiClient;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of assistants.
@@ -94,9 +95,10 @@ final class AssistantListBuilder extends ConfigEntityListBuilder {
         ]));
       }
     }
-    if($has_error){
-      //todo: add link to synchronise assistants
-      $this->messenger->addError($this->t('You can re-create them on the <a href=":to-do">Synchronise Assistants</a> page.', [
+    if ($has_error) {
+      $synchronize_url = Url::fromRoute('openai_assistant.synchronize_assistants')->toString();
+      $this->messenger->addError($this->t('<a href=":url">Click Here</a> to re-synchronize your assistants.', [
+        ':url' => $synchronize_url,
       ]));
     }
 

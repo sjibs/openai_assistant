@@ -45,3 +45,11 @@ openai_assistant.import_assistant:
     _title: 'Import Assistant'
   requirements:
     _permission: 'administer assistant'
+
+openai_assistant.synchronize_assistants:
+  path: '/admin/structure/assistant/synchronize'
+  defaults:
+    _controller: '\Drupal\openai_assistant\Controllers\SynchronizeAssistantsController::synchronize'
+    _title: 'Synchronize Assistants'
+  requirements:
+    _permission: 'administer assistant'
