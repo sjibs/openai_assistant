@@ -139,6 +139,17 @@ final class AssistantForm extends EntityForm {
         \SAVED_UPDATED => $this->t('Updated assistant %label.', $message_args),
       }
     );
+
+    // Send a request to the backend to update the assistant.
+    $this->apiClient->updateAssistant($this->entity->id(), [
+      'model' => $this->entity->get('model'),
+      'name' => $this->entity->label(),
+      'description' => $this->entity->get('description'),
+      'instructions' => $this->entity->get('system_instructions'),
+      'temperature' => $this->entity->get('temperature'),
+      'top_p' => $this->entity->get('topP'),
+    ]);
+
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     return $result;
   }

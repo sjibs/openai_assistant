@@ -55,7 +55,7 @@ class ApiClient {
     $options['headers']['Authorization'] = 'Bearer ' . $apiKey;
     $options['headers']['Content-Type'] = 'application/json';
 
-    $response = $this->httpClient->request('GET', $endpoint, $options);
+    $response = $this->httpClient->request($options['method'] ?? 'GET', $endpoint, $options);
     $data = json_decode($response->getBody()->getContents(), TRUE);
 
     return $data;
@@ -88,6 +88,29 @@ class ApiClient {
     ];
     $response = $this->request($endpoint, $options);
     return $response['data'] ?? [];
+  }
+
+  /**
+   * Updates an assistant on the OpenAI backend.
+   *
+   * @param string $assistant_id
+   *   The assistant ID.
+   * @param array $data
+   *   The data to update.
+   *
+   * @return array
+   *   The response data.
+   */
+  public function updateAssistant(string $assistant_id, array $data): array {
+    $endpoint = 'https://api.openai.com/v1/assistants/' . $assistant_id;
+    $options = [
+      'headers' => [
+        'OpenAI-Beta' => 'assistants=v2',
+      ],
+      'method' => 'POST',
+      'json' => $data,
+    ];
+    return $this->request($endpoint, $options);
   }
 
 }
