@@ -53,15 +53,17 @@ final class AssistantForm extends EntityForm {
       '#required' => TRUE,
     ];
 
-    $form['id'] = [
-      '#type' => 'textfield',
-      '#default_value' => $this->entity->id(),
-      '#title' => $this->t('Assistant ID'),
-      '#machine_name' => [
-        'exists' => [Assistant::class, 'load'],
-      ],
-      '#disabled' => !$this->entity->isNew(),
-    ];
+    if (!$this->entity->isNew()) {
+      $form['id'] = [
+        '#type' => 'textfield',
+        '#default_value' => $this->entity->id(),
+        '#title' => $this->t('Assistant ID'),
+        '#machine_name' => [
+          'exists' => [Assistant::class, 'load'],
+        ],
+        '#disabled' => TRUE,
+      ];
+    }
 
     $form['description'] = [
       '#type' => 'textfield',
@@ -131,24 +133,40 @@ final class AssistantForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state): int {
-    $result = parent::save($form, $form_state);
-    $message_args = ['%label' => $this->entity->label()];
-    $this->messenger()->addStatus(
-      match($result) {
-        \SAVED_NEW => $this->t('Created new assistant %label.', $message_args),
-        \SAVED_UPDATED => $this->t('Updated assistant %label.', $message_args),
-      }
-    );
+    if ($this->entity->isNew()) {
+      // Send a request to API to create the assistant.
+      $response = $this->apiClient->createAssistant([
+        'model' => $form_state->getValue('model'),
+        'name' => $form_state->getValue('label'),
+        'description' => $form_state->getValue('description'),
+        'instructions' => $form_state->getValue('system_instructions'),
+        'temperature' => (float) $form_state->getValue('temperature'),
+        'top_p' => (float) $form_state->getValue('topP'),
+      ]);
 
-    // Send a request to the backend to update the assistant.
-    $this->apiClient->updateAssistant($this->entity->id(), [
-      'model' => $this->entity->get('model'),
-      'name' => $this->entity->label(),
-      'description' => $this->entity->get('description'),
-      'instructions' => $this->entity->get('system_instructions'),
-      'temperature' => $this->entity->get('temperature'),
-      'top_p' => $this->entity->get('topP'),
-    ]);
+      // Create the entity with the ID returned by the API call.
+      $this->entity->set('id', $response['id']);
+      $result = parent::save($form, $form_state);
+    } else {
+      // Send a request to the API to update the assistant.
+      $this->apiClient->updateAssistant($this->entity->id(), [
+        'model' => $this->entity->get('model'),
+        'name' => $this->entity->label(),
+        'description' => $this->entity->get('description'),
+        'instructions' => $this->entity->get('system_instructions'),
+        'temperature' => (float) $this->entity->get('temperature'),
+        'top_p' => (float) $this->entity->get('topP'),
+      ]);
+
+      $result = parent::save($form, $form_state);
+      $message_args = ['%label' => $this->entity->label()];
+      $this->messenger()->addStatus(
+        match($result) {
+          \SAVED_NEW => $this->t('Created new assistant %label.', $message_args),
+          \SAVED_UPDATED => $this->t('Updated assistant %label.', $message_args),
+        }
+      );
+    }
 
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     return $result;

@@ -91,7 +91,7 @@ class ApiClient {
   }
 
   /**
-   * Updates an assistant on the OpenAI backend.
+   * Updates an assistant on the OpenAI api.
    *
    * @param string $assistant_id
    *   The assistant ID.
@@ -102,7 +102,29 @@ class ApiClient {
    *   The response data.
    */
   public function updateAssistant(string $assistant_id, array $data): array {
+    //this route uses the POST method instead of the PATCH method
     $endpoint = 'https://api.openai.com/v1/assistants/' . $assistant_id;
+    $options = [
+      'headers' => [
+        'OpenAI-Beta' => 'assistants=v2',
+      ],
+      'method' => 'POST',
+      'json' => $data,
+    ];
+    return $this->request($endpoint, $options);
+  }
+
+  /**
+   * Creates an assistant on the OpenAI api.
+   *
+   * @param array $data
+   *   The data to create the assistant.
+   *
+   * @return array
+   *   The response data.
+   */
+  public function createAssistant(array $data): array {
+    $endpoint = 'https://api.openai.com/v1/assistants';
     $options = [
       'headers' => [
         'OpenAI-Beta' => 'assistants=v2',
