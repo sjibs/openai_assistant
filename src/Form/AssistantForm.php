@@ -74,6 +74,7 @@ final class AssistantForm extends EntityForm {
     // Fetch the models from the API client.
     $models = $this->apiClient->getModels();
     $model_options = [];
+    $default_model = 'gpt-4o-mini';
     foreach ($models as $model) {
       $model_options[$model['id']] = $model['id'];
     }
@@ -82,7 +83,7 @@ final class AssistantForm extends EntityForm {
       '#type' => 'select',
       '#title' => $this->t('Model'),
       '#options' => $model_options,
-      '#default_value' => $this->entity->get('model'),
+      '#default_value' => $this->entity->isNew() && isset($model_options[$default_model]) ? $default_model : $this->entity->get('model'),
       '#required' => TRUE,
       '#description' => $this->t('GPT-4o mini is recommended as it\'s typically cheaper to run.'),
     ];
@@ -90,7 +91,7 @@ final class AssistantForm extends EntityForm {
     $form['system_instructions'] = [
       '#type' => 'textarea',
       '#title' => $this->t('System Instructions'),
-      '#default_value' => $this->entity->get('system_instructions'),
+      '#default_value' => $this->entity->isNew() ? 'You are a warm, friendly, and supportive assistant, providing clear, helpful, and polite responses to users with a positive and empathetic tone.' : $this->entity->get('system_instructions'),
     ];
 
     $form['generation_settings'] = [
@@ -101,7 +102,7 @@ final class AssistantForm extends EntityForm {
     $form['generation_settings']['temperature'] = [
       '#type' => 'number',
       '#title' => $this->t('Temperature'),
-      '#default_value' => $this->entity->get('temperature'),
+      '#default_value' => $this->entity->isNew() ? 1.0 : $this->entity->get('temperature'),
       '#min' => 0.0,
       '#max' => 2.0,
       '#step' => 0.1,
@@ -112,7 +113,7 @@ final class AssistantForm extends EntityForm {
     $form['generation_settings']['topP'] = [
       '#type' => 'number',
       '#title' => $this->t('Top-p'),
-      '#default_value' => $this->entity->get('topP'),
+      '#default_value' => $this->entity->isNew() ? 1.0 : $this->entity->get('topP'),
       '#min' => 0.0,
       '#max' => 1.0,
       '#step' => 0.1,
