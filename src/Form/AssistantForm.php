@@ -139,6 +139,9 @@ final class AssistantForm extends EntityForm {
       $response = $this->apiClient->createAssistant([
         'model' => $form_state->getValue('model'),
         'name' => $form_state->getValue('label'),
+        'response_format'=> [
+            'type' => 'json_object',
+          ],
         'description' => $form_state->getValue('description'),
         'instructions' => $form_state->getValue('system_instructions'),
         'temperature' => (float) $form_state->getValue('temperature'),
@@ -153,6 +156,9 @@ final class AssistantForm extends EntityForm {
       $this->apiClient->updateAssistant($this->entity->id(), [
         'model' => $this->entity->get('model'),
         'name' => $this->entity->label(),
+        'response_format'=> [
+            'type' => 'json_object',
+          ],
         'description' => $this->entity->get('description'),
         'instructions' => $this->entity->get('system_instructions'),
         'temperature' => (float) $this->entity->get('temperature'),

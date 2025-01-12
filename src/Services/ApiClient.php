@@ -54,6 +54,7 @@ class ApiClient {
 
     $options['headers']['Authorization'] = 'Bearer ' . $apiKey;
     $options['headers']['Content-Type'] = 'application/json';
+    $options['Content-Type'] = 'application/json';
 
     $response = $this->httpClient->request($options['method'] ?? 'GET', $endpoint, $options);
     $data = json_decode($response->getBody()->getContents(), TRUE);
