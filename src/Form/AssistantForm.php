@@ -85,7 +85,7 @@ final class AssistantForm extends EntityForm {
       '#options' => $model_options,
       '#default_value' => $this->entity->isNew() && isset($model_options[$default_model]) ? $default_model : $this->entity->get('model'),
       '#required' => TRUE,
-      '#description' => $this->t('GPT-4o mini is recommended as it\'s typically cheaper to run.'),
+      '#description' => $this->t('gpt-4o-mini is recommended as it\'s typically cheaper to run.'),
     ];
 
     $form['system_instructions'] = [
